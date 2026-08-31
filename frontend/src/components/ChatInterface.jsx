@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 import { useLanguage } from '../contexts/LanguageContext'
 
+const API_URL = import.meta.env.VITE_API_URL || ''
+
 const ChatInterface = ({ onBackToHome }) => {
   const { language, setLanguage, t, availableLanguages } = useLanguage()
   // Load messages from localStorage on component mount
@@ -71,14 +73,14 @@ const ChatInterface = ({ onBackToHome }) => {
 
     try {
       // Get AI response with language parameter
-      const chatRes = await axios.post('/api/chat', { 
+      const chatRes = await axios.post(`${API_URL}/api/chat`, { 
         message: userMessage,
         language: language 
       })
       const aiResponse = chatRes.data.response
 
       // Get TTS and translated text
-      const ttsRes = await axios.post('/api/tts', {
+      const ttsRes = await axios.post(`${API_URL}/api/tts`, {
         text: aiResponse,
         language: language
       })
@@ -148,7 +150,7 @@ const ChatInterface = ({ onBackToHome }) => {
       formData.append('audio', audioBlob, filename)
       formData.append('language', language)
 
-      const transcribeRes = await axios.post('/api/transcribe', formData, {
+      const transcribeRes = await axios.post(`${API_URL}/api/transcribe`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 
@@ -163,14 +165,14 @@ const ChatInterface = ({ onBackToHome }) => {
       addMessage(transcription, 'voice', 'user')
 
       // Get AI response with language parameter
-      const chatRes = await axios.post('/api/chat', { 
+      const chatRes = await axios.post(`${API_URL}/api/chat`, { 
         message: transcription,
         language: language 
       })
       const aiResponse = chatRes.data.response
 
       // Get TTS
-      const ttsRes = await axios.post('/api/tts', {
+      const ttsRes = await axios.post(`${API_URL}/api/tts`, {
         text: aiResponse,
         language: language
       })
@@ -208,14 +210,14 @@ const ChatInterface = ({ onBackToHome }) => {
       formData.append('image', file)
       formData.append('language', language)
 
-      const analyzeRes = await axios.post('/api/analyze-image', formData, {
+      const analyzeRes = await axios.post(`${API_URL}/api/analyze-image`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 
       const result = analyzeRes.data.analysis
 
       // Get TTS
-      const ttsRes = await axios.post('/api/tts', {
+      const ttsRes = await axios.post(`${API_URL}/api/tts`, {
         text: result,
         language: language
       })
