@@ -31,7 +31,7 @@ def get_ai_response(prompt, provider="groq"):
     try:
         if provider == "groq" and GROQ_API_KEY:
             response = groq_client.chat.completions.create(
-                model="llama-3.3-70b-versatile",  # Latest high-quality model
+                model="openai/gpt-oss-120b",  # Latest high-quality model
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.7,
                 max_tokens=500
